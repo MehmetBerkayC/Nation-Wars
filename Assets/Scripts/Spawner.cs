@@ -27,7 +27,6 @@ public enum SpawnPositions
 public class Spawner : MonoBehaviour
 {
 
-
     Dictionary<SpawnPositions, Vector2> spawnPositions = new Dictionary<SpawnPositions, Vector2> {
         {SpawnPositions.Left1, new Vector2(-7.5f, 4)},
         {SpawnPositions.Left2, new Vector2(-7.5f, 3)},
@@ -49,7 +48,7 @@ public class Spawner : MonoBehaviour
         {SpawnPositions.Right9, new Vector2(7.5f,-4)},
     };
     
-    GameObject soldierPrefab;
+    [SerializeField] GameObject soldierPrefab;
     public void SpawnSoldier(/*Takes Soldier Type?*/ SpawnPositions position) // Soldier Type and Pos
     {
         spawnPositions.TryGetValue(position, out Vector2 spawnPos); // Get spawn position

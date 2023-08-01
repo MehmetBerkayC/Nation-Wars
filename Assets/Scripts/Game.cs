@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Game : MonoBehaviour
 {
-    SpawnPositions spawnPositions;
-    
+    Spawner spawner;
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            spawner.SpawnSoldier(SpawnPositions.Left1);
+        }
+    }
 }
