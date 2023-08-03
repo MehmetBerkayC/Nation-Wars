@@ -11,8 +11,22 @@ public class Soldier : MonoBehaviour
     };
 
     bool isAlive;
+    enum SoldierSide
+    {
+        Left,
+        Right
+    };
+
+    SoldierSide soldierSide;
+
+    Dictionary<SoldierSide, float> enemyBasePositionX = new Dictionary<SoldierSide, float>
+    {
+        {SoldierSide.Left, 7.5f},
+        {SoldierSide.Right, -7.5f},
+    };
 
     Vector2 direction;
+
 
     private void OnEnable()
     {
@@ -20,10 +34,12 @@ public class Soldier : MonoBehaviour
 
         if(transform.position.x < 0f) // Left Side
         {
-            movingDirection.TryGetValue(false, out direction);
+            movingDirection.TryGetValue(true, out direction);
+            soldierSide = SoldierSide.Left;
         }else if(transform.position.x > 0f) // Right Side
         {
-            movingDirection.TryGetValue(true, out direction);
+            movingDirection.TryGetValue(false, out direction);
+            soldierSide = SoldierSide.Right;
         }
         else
         {
@@ -36,7 +52,20 @@ public class Soldier : MonoBehaviour
     {
         if (isAlive)
         {
-            transform.Translate(direction, Space.World);
+            CheckIfInEnemyBase();
+            transform.Translate(direction * Time.deltaTime, Space.World);
+        }
+    }
+
+    void CheckIfInEnemyBase()
+    {
+        enemyBasePositionX.TryGetValue(soldierSide, out float position);
+
+        if (
+            (soldierSide == SoldierSide.Left && transform.position.x >= position) ||
+            (soldierSide == SoldierSide.Right && transform.position.x <= position)) 
+        {
+            Destroy(this.gameObject);
         }
     }
 }

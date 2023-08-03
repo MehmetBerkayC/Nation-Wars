@@ -52,7 +52,8 @@ public class Spawner : MonoBehaviour
     public void SpawnSoldier(/*Takes Soldier Type?*/ SpawnPositions position) // Soldier Type and Pos
     {
         spawnPositions.TryGetValue(position, out Vector2 spawnPos); // Get spawn position
-        //Spawns Soldier in said position
+
+        Debug.Log(spawnPos);  //Spawns Soldier in said position
         Instantiate(soldierPrefab, spawnPos, Quaternion.identity);
     }
 }
