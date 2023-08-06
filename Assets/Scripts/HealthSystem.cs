@@ -16,6 +16,16 @@ public class HealthSystem
         isAlive = true;
     }
 
+    public void Kill()
+    {
+        this.isAlive = false;
+    }
+
+    public bool IsAlive()
+    {
+        return isAlive;
+    }
+
     public int GetHealth()
     {
         return currentHealth;

@@ -15,7 +15,7 @@ public class Game : MonoBehaviour
         // Left side controls
         if (Input.GetMouseButtonDown(0))
         {
-            spawner.SpawnSoldier(spawnPositionLeft);
+            spawner.SpawnSoldierLeftSide(spawnPositionLeft);
         }
 
         if (Input.GetKeyDown(KeyCode.W))
@@ -34,7 +34,7 @@ public class Game : MonoBehaviour
         // Right side controls
         if (Input.GetMouseButtonDown(1))
         {
-            spawner.SpawnSoldier(spawnPositionRight);
+            spawner.SpawnSoldierRightSide(spawnPositionRight);
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -53,7 +53,7 @@ public class Game : MonoBehaviour
 
     void ChangeSpawnPositionForLeft(int increment)
     {
-        spawnPositionLeft = spawnPositionLeft + increment;
+        spawnPositionLeft += increment;
         if(spawnPositionLeft <= SpawnPositions.Left1)
         {
             spawnPositionLeft = SpawnPositions.Left1;
@@ -65,7 +65,7 @@ public class Game : MonoBehaviour
     
     void ChangeSpawnPositionForRight(int increment)
     {
-        spawnPositionRight = spawnPositionRight + increment;
+        spawnPositionRight += increment;
         if(spawnPositionRight <= SpawnPositions.Right1)
         {
             spawnPositionRight = SpawnPositions.Right1;

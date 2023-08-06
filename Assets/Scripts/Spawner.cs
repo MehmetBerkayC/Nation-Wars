@@ -27,7 +27,7 @@ public enum SpawnPositions
 public class Spawner : MonoBehaviour
 {
 
-    Dictionary<SpawnPositions, Vector2> spawnPositions = new Dictionary<SpawnPositions, Vector2> {
+    Dictionary<SpawnPositions, Vector2> spawnPositionsLeft = new Dictionary<SpawnPositions, Vector2> {
         {SpawnPositions.Left1, new Vector2(-7.5f, 4)},
         {SpawnPositions.Left2, new Vector2(-7.5f, 3)},
         {SpawnPositions.Left3, new Vector2(-7.5f, 2)},
@@ -36,7 +36,11 @@ public class Spawner : MonoBehaviour
         {SpawnPositions.Left6, new Vector2(-7.5f,-1)},
         {SpawnPositions.Left7, new Vector2(-7.5f,-2)},
         {SpawnPositions.Left8, new Vector2(-7.5f,-3)},
-        {SpawnPositions.Left9, new Vector2(-7.5f,-4)},
+        {SpawnPositions.Left9, new Vector2(-7.5f,-4)}
+    };
+
+    Dictionary<SpawnPositions, Vector2> spawnPositionsRight = new Dictionary<SpawnPositions, Vector2>
+    {
         {SpawnPositions.Right1, new Vector2(7.5f, 4)},
         {SpawnPositions.Right2, new Vector2(7.5f, 3)},
         {SpawnPositions.Right3, new Vector2(7.5f, 2)},
@@ -45,15 +49,23 @@ public class Spawner : MonoBehaviour
         {SpawnPositions.Right6, new Vector2(7.5f,-1)},
         {SpawnPositions.Right7, new Vector2(7.5f,-2)},
         {SpawnPositions.Right8, new Vector2(7.5f,-3)},
-        {SpawnPositions.Right9, new Vector2(7.5f,-4)},
+        {SpawnPositions.Right9, new Vector2(7.5f,-4)}
     };
     
     [SerializeField] GameObject soldierPrefab;
-    public void SpawnSoldier(/*Takes Soldier Type?*/ SpawnPositions position) // Soldier Type and Pos
+    public void SpawnSoldierLeftSide(/*Takes Soldier Type?*/ SpawnPositions position) // Soldier Type and Pos
     {
-        spawnPositions.TryGetValue(position, out Vector2 spawnPos); // Get spawn position
-
-        Debug.Log(spawnPos);  //Spawns Soldier in said position
+        spawnPositionsLeft.TryGetValue(position, out Vector2 spawnPos); // Get spawn position
+        
+        //Spawns Soldier in said position
+        Instantiate(soldierPrefab, spawnPos, Quaternion.identity);
+    }
+    
+    public void SpawnSoldierRightSide(/*Takes Soldier Type?*/ SpawnPositions position) // Soldier Type and Pos
+    {
+        spawnPositionsRight.TryGetValue(position, out Vector2 spawnPos); // Get spawn position
+        
+        //Spawns Soldier in said position
         Instantiate(soldierPrefab, spawnPos, Quaternion.identity);
     }
 }

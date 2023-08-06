@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class Soldier : MonoBehaviour
 {
+    [SerializeField] int maxHealth;
+    [SerializeField] int damage;
+
     Dictionary<bool, Vector2> movingDirection = new Dictionary<bool, Vector2>
     {
         {true, Vector2.right},
         {false, Vector2.left}
     };
 
-    bool isAlive;
     enum SoldierSide
     {
         Left,
@@ -27,33 +29,40 @@ public class Soldier : MonoBehaviour
 
     Vector2 direction;
 
+    HealthSystem healthSystem;
 
     private void OnEnable()
     {
-        isAlive = true;
+        healthSystem = new HealthSystem(maxHealth);
 
         if(transform.position.x < 0f) // Left Side
         {
             movingDirection.TryGetValue(true, out direction);
             soldierSide = SoldierSide.Left;
-        }else if(transform.position.x > 0f) // Right Side
+        }
+        else if(transform.position.x > 0f) // Right Side
         {
             movingDirection.TryGetValue(false, out direction);
             soldierSide = SoldierSide.Right;
         }
         else
         {
-            Debug.LogError("Incorrect Spawn Position");
+            Debug.LogError("Incorrect spawn position, object will be destroyed!");
+            Destroy(this.gameObject);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isAlive)
+        if (healthSystem.IsAlive())
         {
             CheckIfInEnemyBase();
             transform.Translate(direction * Time.deltaTime, Space.World);
+        }
+        else
+        {
+            Destroy(this.gameObject);
         }
     }
 
@@ -63,9 +72,11 @@ public class Soldier : MonoBehaviour
 
         if (
             (soldierSide == SoldierSide.Left && transform.position.x >= position) ||
-            (soldierSide == SoldierSide.Right && transform.position.x <= position)) 
+            (soldierSide == SoldierSide.Right && transform.position.x <= position)
+            ) 
         {
-            Destroy(this.gameObject);
+            // Score point and destroy soldier
+            healthSystem.Kill();
         }
     }
 }
