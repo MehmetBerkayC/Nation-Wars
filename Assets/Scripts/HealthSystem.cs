@@ -36,6 +36,10 @@ public class HealthSystem
         if (isAlive && currentHealth < maxHealth)
         {
             currentHealth += amount;
+            if(currentHealth >= maxHealth)
+            {
+                currentHealth = maxHealth;
+            }
         }
         else
         {

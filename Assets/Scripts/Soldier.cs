@@ -7,6 +7,11 @@ public class Soldier : MonoBehaviour
     [SerializeField] int maxHealth;
     [SerializeField] int damage;
 
+    [SerializeField] float range;
+
+    Vector3 boxCenter;
+    Vector2 boxHalfExtends;
+
     Dictionary<bool, Vector2> movingDirection = new Dictionary<bool, Vector2>
     {
         {true, Vector2.right},
@@ -27,6 +32,13 @@ public class Soldier : MonoBehaviour
         {SoldierSide.Right, -7.5f},
     };
 
+    enum States
+    {
+        Searching,
+        Attacking,
+    }
+
+    States soldierState;
     Vector2 direction;
 
     HealthSystem healthSystem;
@@ -57,13 +69,33 @@ public class Soldier : MonoBehaviour
         if (healthSystem.IsAlive())
         {
             CheckIfInEnemyBase();
-            transform.Translate(direction * Time.deltaTime, Space.World);
+
+            if(soldierState == States.Searching)
+            {
+                // Move
+                transform.Translate(direction * Time.deltaTime, Space.World);
+
+                // Detect enemy
+                boxCenter = (transform.position) + (soldierSide == SoldierSide.Left ? Vector3.right : Vector3.right);
+                boxHalfExtends = new Vector2(.5f, .5f);
+                Collider[] collisions = Physics.OverlapBox(boxCenter, boxHalfExtends);
+
+                if (collisions.Length > 0)
+                {
+                    soldierState = States.Attacking;
+                }
+            }
+            else if (soldierState == States.Attacking)
+            {
+                // do nothing
+            }
         }
         else
         {
             Destroy(this.gameObject);
         }
     }
+
 
     void CheckIfInEnemyBase()
     {
@@ -77,5 +109,12 @@ public class Soldier : MonoBehaviour
             // Score point and destroy soldier
             healthSystem.Kill();
         }
+    }
+
+    // Use this if knockback is implemented
+    void TakeDamageAndKnockback(int damage, float knockback)
+    {
+        healthSystem.TakeDamage(damage);
+        transform.position += new Vector3(0f, soldierSide == SoldierSide.Left ? knockback : -knockback, 0f);
     }
 }
