@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 50
   damage: 20
-  range: 0
+  range: 3
 --- !u!61 &-1753282671640703679
 BoxCollider2D:
   m_ObjectHideFlags: 0

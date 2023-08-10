@@ -9,9 +9,6 @@ public class Soldier : MonoBehaviour
 
     [SerializeField] float range;
 
-    Vector3 boxCenter;
-    Vector2 boxHalfExtends;
-
     Dictionary<bool, Vector2> movingDirection = new Dictionary<bool, Vector2>
     {
         {true, Vector2.right},
@@ -28,8 +25,8 @@ public class Soldier : MonoBehaviour
 
     Dictionary<SoldierSide, float> enemyBasePositionX = new Dictionary<SoldierSide, float>
     {
-        {SoldierSide.Left, 7.5f},
-        {SoldierSide.Right, -7.5f},
+        {SoldierSide.Left, 9.5f},
+        {SoldierSide.Right, -9.5f},
     };
 
     enum States
@@ -40,6 +37,9 @@ public class Soldier : MonoBehaviour
 
     States soldierState;
     Vector2 direction;
+
+    Vector3 boxCenter;
+    Vector3 boxHalfExtends;
 
     HealthSystem healthSystem;
 
@@ -76,8 +76,10 @@ public class Soldier : MonoBehaviour
                 transform.Translate(direction * Time.deltaTime, Space.World);
 
                 // Detect enemy
-                boxCenter = (transform.position) + (soldierSide == SoldierSide.Left ? Vector3.right : Vector3.right);
-                boxHalfExtends = new Vector2(.5f, .5f);
+                Vector3 currentPosition = transform.position;
+                currentPosition.x += (soldierSide == SoldierSide.Left ? range: -range ) / 2 ; 
+                boxCenter = currentPosition + (soldierSide == SoldierSide.Left ? Vector3.right : Vector3.left);
+                boxHalfExtends = new Vector2(range, .5f);
                 Collider[] collisions = Physics.OverlapBox(boxCenter, boxHalfExtends);
 
                 if (collisions.Length > 0)
@@ -116,5 +118,11 @@ public class Soldier : MonoBehaviour
     {
         healthSystem.TakeDamage(damage);
         transform.position += new Vector3(0f, soldierSide == SoldierSide.Left ? knockback : -knockback, 0f);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireCube(boxCenter, boxHalfExtends);
     }
 }
