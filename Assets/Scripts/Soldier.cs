@@ -6,14 +6,25 @@ public class Soldier : MonoBehaviour
 {
     [SerializeField] int maxHealth;
     [SerializeField] int damage;
+    [SerializeField] float knockback;
 
-    [SerializeField] float range;
+    [SerializeField] float speed = 1f;
+    
+    [SerializeField] float range = 0.5f;
 
     Dictionary<bool, Vector2> movingDirection = new Dictionary<bool, Vector2>
     {
         {true, Vector2.right},
         {false, Vector2.left}
     };
+
+    enum SoldierType
+    {
+        Melee,
+        AOEMelee,
+        Ranged,
+        AOERanged,
+    }
 
     enum SoldierSide
     {
@@ -35,11 +46,15 @@ public class Soldier : MonoBehaviour
         Attacking,
     }
 
+    SoldierType soldierType;
     States soldierState;
     Vector2 direction;
 
     Vector3 boxCenter;
     Vector3 boxHalfExtends;
+
+    Collider[] collisions;
+    GameObject target;
 
     HealthSystem healthSystem;
 
@@ -70,26 +85,51 @@ public class Soldier : MonoBehaviour
         {
             CheckIfInEnemyBase();
 
-            if(soldierState == States.Searching)
+            if (soldierState == States.Attacking)
+            {
+                if (target != null && target.GetComponent<Soldier>().IsSoldierAlive())
+                { // target is alive
+                    float distance = (target.transform.position.x - transform.position.x);
+                    if (distance > range)
+                    { // Get closer if out of range
+                        transform.Translate(direction * speed * Time.deltaTime, Space.World);
+                    }
+
+                    // Deal Damage
+                    target.GetComponent<Soldier>().TakeDamageAndKnockback(damage, knockback);
+                }
+                else if (target != null && !target.GetComponent<Soldier>().IsSoldierAlive())
+                { // target is dead
+                    soldierState = States.Searching;
+                }
+      
+                // do nothing
+            } 
+            else if (soldierState == States.Searching)
             {
                 // Move
-                transform.Translate(direction * Time.deltaTime, Space.World);
+                transform.Translate(direction * speed * Time.deltaTime, Space.World);
 
-                // Detect enemy
+                // Try to Detect enemy
                 Vector3 currentPosition = transform.position;
                 currentPosition.x += (soldierSide == SoldierSide.Left ? range: -range ) / 2 ; 
                 boxCenter = currentPosition + (soldierSide == SoldierSide.Left ? Vector3.right : Vector3.left);
                 boxHalfExtends = new Vector2(range, .5f);
-                Collider[] collisions = Physics.OverlapBox(boxCenter, boxHalfExtends);
+                collisions = Physics.OverlapBox(boxCenter, boxHalfExtends);
 
-                if (collisions.Length > 0)
+                // work on progress
+                if (collisions.Length > 0) // Check if it has soldier script**
                 {
                     soldierState = States.Attacking;
+
+                    /// working on this
+                    if (true) // check the soldiertype and figure out how many things will get damaged
+                    {
+
+                    }
+
+                    target = collisions[0].gameObject;
                 }
-            }
-            else if (soldierState == States.Attacking)
-            {
-                // do nothing
             }
         }
         else
@@ -98,6 +138,11 @@ public class Soldier : MonoBehaviour
         }
     }
 
+
+    public bool IsSoldierAlive()
+    {
+        return healthSystem.IsAlive();
+    }
 
     void CheckIfInEnemyBase()
     {
@@ -114,7 +159,7 @@ public class Soldier : MonoBehaviour
     }
 
     // Use this if knockback is implemented
-    void TakeDamageAndKnockback(int damage, float knockback)
+    void TakeDamageAndKnockback(int damage, float knockback = 0.2f)
     {
         healthSystem.TakeDamage(damage);
         transform.position += new Vector3(0f, soldierSide == SoldierSide.Left ? knockback : -knockback, 0f);
