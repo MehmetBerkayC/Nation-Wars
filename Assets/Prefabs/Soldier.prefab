@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5293163777595964682}
   - component: {fileID: -6342972409213421295}
   - component: {fileID: -1753282671640703679}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Soldier
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 50
   damage: 20
+  knockback: 0
+  speed: 1
   range: 3
+  soldierMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!61 &-1753282671640703679
 BoxCollider2D:
   m_ObjectHideFlags: 0
