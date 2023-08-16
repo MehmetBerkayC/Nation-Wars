@@ -12,8 +12,6 @@ public class Soldier : MonoBehaviour
     
     [SerializeField] float range = 0.5f;
 
-    [SerializeField] LayerMask soldierMask;
-
     Dictionary<bool, Vector2> movingDirection = new Dictionary<bool, Vector2>
     {
         {true, Vector2.right},
@@ -28,13 +26,23 @@ public class Soldier : MonoBehaviour
         AOERanged,
     }
 
-    enum SoldierSide
+    public enum SoldierSide
     {
         Left,
         Right
     };
 
-    SoldierSide soldierSide;
+    public SoldierSide P_SoldierSide
+    {
+        get
+        {
+            return soldierSide;
+        }
+        private set
+        {
+            soldierSide = value;
+        }
+    }
 
     Dictionary<SoldierSide, float> enemyBasePositionX = new Dictionary<SoldierSide, float>
     {
@@ -50,14 +58,16 @@ public class Soldier : MonoBehaviour
 
     [SerializeField] SoldierType soldierType;
 
+    SoldierSide soldierSide;
     States soldierState;
     Vector2 direction;
 
     Vector3 boxCenter;
     Vector3 boxHalfExtends;
 
-    Collider[] collisions;
-    GameObject[] targets;
+    Collider2D[] collisions;
+
+    List<GameObject> targets;
 
     HealthSystem healthSystem;
 
@@ -68,12 +78,12 @@ public class Soldier : MonoBehaviour
         if(transform.position.x < 0f) // Left Side
         {
             movingDirection.TryGetValue(true, out direction);
-            soldierSide = SoldierSide.Left;
+            P_SoldierSide = SoldierSide.Left;
         }
         else if(transform.position.x > 0f) // Right Side
         {
             movingDirection.TryGetValue(false, out direction);
-            soldierSide = SoldierSide.Right;
+            P_SoldierSide = SoldierSide.Right;
         }
         else
         {
@@ -98,17 +108,6 @@ public class Soldier : MonoBehaviour
                 transform.Translate(direction * speed * Time.deltaTime, Space.World);
 
                 DetectEnemies();
-
-                // work on progress
-                if (collisions.Length > 0)
-                {
-                    soldierState = States.Attacking;
-
-                    for (int i = 0; i < collisions.Length; i++)
-                    {
-                        targets[i] = collisions[i].gameObject;
-                    }
-                }
             }
         }
         else
@@ -117,16 +116,40 @@ public class Soldier : MonoBehaviour
         }
     }
 
+
     void DetectEnemies()
     {
         // Try to Detect enemy
-        Vector3 currentPosition = transform.position;
-        currentPosition.x += (soldierSide == SoldierSide.Left ? range : -range) / 2;
-        boxCenter = currentPosition + (soldierSide == SoldierSide.Left ? Vector3.right : Vector3.left);
+        Vector2 currentPosition = transform.position;
+        currentPosition.x += (P_SoldierSide == SoldierSide.Left ? range : -range) / 2;
+        boxCenter = currentPosition + (P_SoldierSide == SoldierSide.Left ? Vector2.right : Vector2.left);
         boxHalfExtends = new Vector2(range, .5f);
 
         // checking layer for enemies
-        collisions = Physics.OverlapBox(boxCenter, boxHalfExtends, Quaternion.identity, soldierMask);
+        collisions = Physics2D.OverlapBoxAll(boxCenter, boxHalfExtends, 0);
+
+        // if enemy present switch to attack and perform the first
+        if (collisions.Length > 0)
+        {
+            Debug.Log("Collision Detected, Array Length:" + collisions.Length);
+
+            for (int i = 0; i < collisions.Length; i++)
+            {
+                if(collisions[i].gameObject.GetComponent<Soldier>().P_SoldierSide != P_SoldierSide) // if enemy
+                {
+                    targets.Add(collisions[i].gameObject);
+                }
+            }
+
+            Debug.Log("Targets:" + targets.Count);
+
+            if (targets.Count > 0)
+            {
+                soldierState = States.Attacking;
+
+                AttackTargets();
+            }
+        }
     }
 
     void AttackTargets()
@@ -135,21 +158,23 @@ public class Soldier : MonoBehaviour
         {
             if (target != null)
             {
-                if (target != null && target.GetComponent<Soldier>().IsSoldierAlive())
+                if (target.GetComponent<Soldier>().IsSoldierAlive())
                 { // target is alive
                     // Deal Damage
                     target.GetComponent<Soldier>().TakeDamageAndKnockback(damage, knockback);
-                    
+
                     #region Probably not necessary, distance check after knockback
-                    float distance = (target.transform.position.x - transform.position.x);
-                    if (distance > range)
-                    { // Get closer if out of range
-                        transform.Translate(direction * speed * Time.deltaTime, Space.World);
-                    }
+                    //float distance = (target.transform.position.x - transform.position.x);
+                    //if (distance > range)
+                    //{ // Get closer if out of range
+                    //    transform.Translate(direction * speed * Time.deltaTime, Space.World);
+                    //}
                     #endregion
                 }
-                else if (target != null && !target.GetComponent<Soldier>().IsSoldierAlive())
-                { // target is dead
+                else
+                {
+                    targets.Remove(target);
+
                     soldierState = States.Searching;
                 }
             }
@@ -163,11 +188,11 @@ public class Soldier : MonoBehaviour
 
     void CheckIfInEnemyBase() // Positions ARE HARDCODED! 
     {
-        enemyBasePositionX.TryGetValue(soldierSide, out float position);
+        enemyBasePositionX.TryGetValue(P_SoldierSide, out float position);
 
         if (
-            (soldierSide == SoldierSide.Left && transform.position.x >= position) ||
-            (soldierSide == SoldierSide.Right && transform.position.x <= position)
+            (P_SoldierSide == SoldierSide.Left && transform.position.x >= position) ||
+            (P_SoldierSide == SoldierSide.Right && transform.position.x <= position)
             ) 
         {
             // Score point and destroy soldier
@@ -179,7 +204,9 @@ public class Soldier : MonoBehaviour
     void TakeDamageAndKnockback(int damage, float knockback = 0.2f)
     {
         healthSystem.TakeDamage(damage);
-        transform.position += new Vector3(0f, soldierSide == SoldierSide.Left ? knockback : -knockback, 0f);
+        transform.position += new Vector3(0f, P_SoldierSide == SoldierSide.Left ? knockback : -knockback, 0f);
+
+        Debug.Log(gameObject.name + " Damage Taken: " + damage + " Current HP:" + healthSystem.GetHealth());
     }
 
     private void OnDrawGizmos()
