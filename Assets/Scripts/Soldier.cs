@@ -151,7 +151,7 @@ public class Soldier : MonoBehaviour
         // if enemy present switch to attack and perform the first
         if (collisions.Length > 0)
         {
-            Debug.Log("Collision Detected, Array Length:" + collisions.Length);
+            //Debug.Log("Collision Detected, Array Length:" + collisions.Length);
 
             for (int i = 0; i < collisions.Length; i++)
             {
@@ -260,7 +260,7 @@ public class Soldier : MonoBehaviour
         healthSystem.TakeDamage(damage);
         transform.position += new Vector3(0f, P_SoldierSide == SoldierSide.Left ? knockback : -knockback, 0f);
 
-        Debug.Log(gameObject.name + " Damage Taken: " + damage + " Current HP:" + healthSystem.GetHealth());
+        //Debug.Log(gameObject.name + " Damage Taken: " + damage + " Current HP:" + healthSystem.GetHealth());
     }
 
     private void OnDrawGizmos()
