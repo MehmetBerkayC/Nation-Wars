@@ -174,24 +174,22 @@ public class Soldier : MonoBehaviour
     {
         foreach (GameObject target in validTargets)
         {
-            
-            if (target.GetComponent<Soldier>().IsSoldierAlive())
-            { // target is alive
-                // Deal Damage
-                target.GetComponent<Soldier>().TakeDamageAndKnockback(damage, knockback);
-
-
-                #region Probably not necessary, distance check after knockback
-                //float distance = (target.transform.position.x - transform.position.x);
-                //if (distance > range)
-                //{ // Get closer if out of range
-                //    transform.Translate(direction * speed * Time.deltaTime, Space.World);
-                //}
-                #endregion
-            }
-            else
+            if (target != null)
             {
-                validTargets.Remove(target);
+                if (target.GetComponent<Soldier>().IsSoldierAlive())
+                { // target is alive
+                  // Deal Damage
+                    target.GetComponent<Soldier>().TakeDamageAndKnockback(damage, knockback);
+
+
+                    #region Probably not necessary, distance check after knockback
+                    //float distance = (target.transform.position.x - transform.position.x);
+                    //if (distance > range)
+                    //{ // Get closer if out of range
+                    //    transform.Translate(direction * speed * Time.deltaTime, Space.World);
+                    //}
+                    #endregion
+                }
             }
         }
     }
