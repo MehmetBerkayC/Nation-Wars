@@ -114,9 +114,9 @@ public class Game : MonoBehaviour
     {
         soldierIndexLeft += increment;
 
-        if (soldierIndexLeft >= spawner.soldierPrefabs.Length)
+        if (soldierIndexLeft >= spawner.soldierPrefabs.Length - 1)
         {
-            soldierIndexLeft = spawner.soldierPrefabs.Length;
+            soldierIndexLeft = spawner.soldierPrefabs.Length - 1;
         }
         else if(soldierIndexLeft <= 0) // soldierPrefabs should be an array(change this if became a list/dictionary)
         {
@@ -128,9 +128,9 @@ public class Game : MonoBehaviour
     {
         soldierIndexRight += increment;
 
-        if (soldierIndexRight >= spawner.soldierPrefabs.Length)
+        if (soldierIndexRight >= spawner.soldierPrefabs.Length - 1)
         {
-            soldierIndexRight = spawner.soldierPrefabs.Length;
+            soldierIndexRight = spawner.soldierPrefabs.Length - 1;
         }
         else if(soldierIndexRight <= 0) // soldierPrefabs should be an array(change this if became a list/dictionary)
         {
