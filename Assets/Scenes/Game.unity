@@ -1760,6 +1760,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soldierPrefabs:
   - {fileID: 7546495653268524882, guid: 1d455a13299213644aaa7a3d63ae78c0, type: 3}
+  - {fileID: 7546495653268524882, guid: 2932c5ff0371a9443bdc75149b5be1af, type: 3}
+  - {fileID: 7546495653268524882, guid: 77cb689e731d6ac418be39c10facaa07, type: 3}
+  - {fileID: 7546495653268524882, guid: 3c019123efc24554d9c04cc53419b4a2, type: 3}
 --- !u!4 &2062601951
 Transform:
   m_ObjectHideFlags: 0
