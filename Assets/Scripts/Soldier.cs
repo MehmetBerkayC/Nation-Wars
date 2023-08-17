@@ -135,7 +135,6 @@ public class Soldier : MonoBehaviour
         collisions = Physics2D.OverlapBoxAll(boxCenter, boxHalfExtends, 0);
 
         Dictionary<int, int> validTargetIndexes = new Dictionary<int, int>();
-        //int validTargetCount = 0;
 
         // if enemy present switch to attack and perform the first
         if (collisions.Length > 0)
