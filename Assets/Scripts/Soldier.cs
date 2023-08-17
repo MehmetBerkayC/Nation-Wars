@@ -100,9 +100,8 @@ public class Soldier : MonoBehaviour
 
             if (soldierState == States.Attacking)
             {
-                if (validTargets.Count > 0)
+                if (!CheckIsTargetArrayEmpty())
                 {
-                    DetectEnemies();
                     AttackTargets();
                 }
                 else
@@ -148,21 +147,11 @@ public class Soldier : MonoBehaviour
                 if(collisions[i].gameObject.GetComponent<Soldier>().IsSoldierAlive() && collisions[i].gameObject.GetComponent<Soldier>().P_SoldierSide != P_SoldierSide) // if enemy
                 {
                     validTargets.Add(collisions[i].gameObject);
-                    //validTargetIndexes.Add(validTargetCount, i);
-                    //validTargetCount++;
-                    //targets.Add(collisions[i].gameObject);
                 }
             }
 
             if (validTargets.Count > 0)
             {
-                //targets = new GameObject[validTargetCount];
-                //for (int i = 0; i < validTargetCount; i++)
-                //{
-                //    validTargetIndexes.TryGetValue(i, out int index);
-                //    targets[i] = collisions[index].gameObject;
-                //}
-                
                 // Start Attacking
                 soldierState = States.Attacking;
                 AttackTargets();
@@ -180,8 +169,7 @@ public class Soldier : MonoBehaviour
                 { // target is alive
                   // Deal Damage
                     target.GetComponent<Soldier>().TakeDamageAndKnockback(damage, knockback);
-
-
+                    
                     #region Probably not necessary, distance check after knockback
                     //float distance = (target.transform.position.x - transform.position.x);
                     //if (distance > range)
@@ -192,6 +180,18 @@ public class Soldier : MonoBehaviour
                 }
             }
         }
+    }
+
+    bool CheckIsTargetArrayEmpty()
+    {
+        int validCount = 0;
+
+        foreach (GameObject target in validTargets)
+        {
+            validCount += (target == null) ? 0 : 1;
+        }
+
+        return validCount > 0 ? false: true;
     }
 
     public bool IsSoldierAlive()
