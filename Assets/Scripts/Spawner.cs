@@ -52,20 +52,23 @@ public class Spawner : MonoBehaviour
         {SpawnPositions.Right9, new Vector2(9.5f,-4)}
     };
     
-    [SerializeField] GameObject soldierPrefab;
-    public void SpawnSoldierLeftSide(/*Takes Soldier Type?*/ SpawnPositions position) // Soldier Type and Pos
+    // Temporaryly public -> probably will make a class/script with either dictionary for each
+    // kingdom/race or simple array with enums for distinction on said kingdom/race
+    public GameObject[] soldierPrefabs;
+
+    public void SpawnSoldierLeftSide(int soldierIndex, SpawnPositions position) // Soldier Type and Pos
     {
         spawnPositionsLeft.TryGetValue(position, out Vector2 spawnPos); // Get spawn position
         
         //Spawns Soldier in said position
-        Instantiate(soldierPrefab, spawnPos, Quaternion.identity);
+        Instantiate(soldierPrefabs[soldierIndex], spawnPos, Quaternion.identity);
     }
     
-    public void SpawnSoldierRightSide(/*Takes Soldier Type?*/ SpawnPositions position) // Soldier Type and Pos
+    public void SpawnSoldierRightSide(int soldierIndex, SpawnPositions position) // Soldier Type and Pos
     {
         spawnPositionsRight.TryGetValue(position, out Vector2 spawnPos); // Get spawn position
         
         //Spawns Soldier in said position
-        Instantiate(soldierPrefab, spawnPos, Quaternion.identity);
+        Instantiate(soldierPrefabs[soldierIndex], spawnPos, Quaternion.identity);
     }
 }
