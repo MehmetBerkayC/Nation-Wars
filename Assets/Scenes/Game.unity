@@ -726,7 +726,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &534333269
 Transform:
   m_ObjectHideFlags: 0
@@ -1758,7 +1758,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0eb9b8099abc2a4e801dbdb0b02e6b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soldierPrefab: {fileID: 7546495653268524882, guid: 1d455a13299213644aaa7a3d63ae78c0, type: 3}
+  soldierPrefabs:
+  - {fileID: 7546495653268524882, guid: 1d455a13299213644aaa7a3d63ae78c0, type: 3}
 --- !u!4 &2062601951
 Transform:
   m_ObjectHideFlags: 0
