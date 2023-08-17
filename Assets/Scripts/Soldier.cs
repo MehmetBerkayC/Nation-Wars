@@ -12,6 +12,8 @@ public class Soldier : MonoBehaviour
     
     [SerializeField] float range = 0.5f;
 
+    [SerializeField] float attackRate = 0.5f;
+
     Dictionary<bool, Vector2> movingDirection = new Dictionary<bool, Vector2>
     {
         {true, Vector2.right},
@@ -71,6 +73,8 @@ public class Soldier : MonoBehaviour
 
     HealthSystem healthSystem;
 
+    float attackTimer = 0;
+
     private void OnEnable()
     {
         healthSystem = new HealthSystem(maxHealth);
@@ -96,13 +100,21 @@ public class Soldier : MonoBehaviour
     {
         if (healthSystem.IsAlive())
         {
+            attackTimer += Time.deltaTime;
             CheckIfInEnemyBase();
 
             if (soldierState == States.Attacking)
             {
                 if (!CheckIsTargetArrayEmpty())
                 {
-                    AttackTargets();
+                    if(soldierType == SoldierType.Melee)
+                    {
+                        AttackTargets();
+                    }
+                    else if (soldierType == SoldierType.AOEMelee)
+                    {
+                        AttackTargetsAOE();
+                    }
                 }
                 else
                 {
@@ -153,7 +165,6 @@ public class Soldier : MonoBehaviour
             {
                 // Start Attacking
                 soldierState = States.Attacking;
-                AttackTargets();
             }
         }
     }
@@ -166,18 +177,49 @@ public class Soldier : MonoBehaviour
             {
                 if (target.GetComponent<Soldier>().IsSoldierAlive())
                 { // target is alive
-                  // Deal Damage
-                    target.GetComponent<Soldier>().TakeDamageAndKnockback(damage, knockback);
-                    
-                    #region Probably not necessary, distance check after knockback
-                    //float distance = (target.transform.position.x - transform.position.x);
-                    //if (distance > range)
-                    //{ // Get closer if out of range
-                    //    transform.Translate(direction * speed * Time.deltaTime, Space.World);
-                    //}
-                    #endregion
+                    if (attackTimer >= attackRate)
+                    {
+                        // Deal Damage
+                        target.GetComponent<Soldier>().TakeDamageAndKnockback(damage, knockback);
+                        attackTimer = 0f;
+
+                        #region Probably not necessary, distance check after knockback
+                        //float distance = (target.transform.position.x - transform.position.x);
+                        //if (distance > range)
+                        //{ // Get closer if out of range
+                        //    transform.Translate(direction * speed * Time.deltaTime, Space.World);
+                        //}
+                        #endregion
+                    }
                 }
             }
+        }
+    }
+    void AttackTargetsAOE()
+    {
+        if (attackTimer >= attackRate)
+        {
+            foreach (GameObject target in validTargets)
+            {
+                if (target != null)
+                {
+                    if (target.GetComponent<Soldier>().IsSoldierAlive())
+                    { // target is alive
+                      // Deal Damage
+
+                        target.GetComponent<Soldier>().TakeDamageAndKnockback(damage, knockback);
+
+                        #region Probably not necessary, distance check after knockback
+                        //float distance = (target.transform.position.x - transform.position.x);
+                        //if (distance > range)
+                        //{ // Get closer if out of range
+                        //    transform.Translate(direction * speed * Time.deltaTime, Space.World);
+                        //}
+                        #endregion
+                    }
+                }
+            }
+            attackTimer = 0f;
         }
     }
 
