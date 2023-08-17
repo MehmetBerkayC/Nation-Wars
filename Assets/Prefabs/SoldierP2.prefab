@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -6342972409213421295}
   - component: {fileID: -1753282671640703679}
   m_Layer: 6
-  m_Name: Soldier
+  m_Name: SoldierP2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99,11 +99,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 50
-  damage: 10
+  damage: 8
   knockback: 0
   speed: 1
   range: 1
-  attackRate: 1
+  attackRate: 1.5
   soldierType: 0
 --- !u!61 &-1753282671640703679
 BoxCollider2D:
