@@ -67,7 +67,7 @@ public class Soldier : MonoBehaviour
 
     Collider2D[] collisions;
 
-    List<GameObject> targets;
+    List<GameObject> validTargets = new List<GameObject>();
 
     HealthSystem healthSystem;
 
@@ -100,7 +100,15 @@ public class Soldier : MonoBehaviour
 
             if (soldierState == States.Attacking)
             {
-                AttackTargets();
+                if (validTargets.Count > 0)
+                {
+                    DetectEnemies();
+                    AttackTargets();
+                }
+                else
+                {
+                    soldierState = States.Searching;
+                }
             } 
             else if (soldierState == States.Searching)
             {
@@ -116,7 +124,6 @@ public class Soldier : MonoBehaviour
         }
     }
 
-
     void DetectEnemies()
     {
         // Try to Detect enemy
@@ -128,6 +135,9 @@ public class Soldier : MonoBehaviour
         // checking layer for enemies
         collisions = Physics2D.OverlapBoxAll(boxCenter, boxHalfExtends, 0);
 
+        Dictionary<int, int> validTargetIndexes = new Dictionary<int, int>();
+        //int validTargetCount = 0;
+
         // if enemy present switch to attack and perform the first
         if (collisions.Length > 0)
         {
@@ -135,18 +145,26 @@ public class Soldier : MonoBehaviour
 
             for (int i = 0; i < collisions.Length; i++)
             {
-                if(collisions[i].gameObject.GetComponent<Soldier>().P_SoldierSide != P_SoldierSide) // if enemy
+                if(collisions[i].gameObject.GetComponent<Soldier>().IsSoldierAlive() && collisions[i].gameObject.GetComponent<Soldier>().P_SoldierSide != P_SoldierSide) // if enemy
                 {
-                    targets.Add(collisions[i].gameObject);
+                    validTargets.Add(collisions[i].gameObject);
+                    //validTargetIndexes.Add(validTargetCount, i);
+                    //validTargetCount++;
+                    //targets.Add(collisions[i].gameObject);
                 }
             }
 
-            Debug.Log("Targets:" + targets.Count);
-
-            if (targets.Count > 0)
+            if (validTargets.Count > 0)
             {
+                //targets = new GameObject[validTargetCount];
+                //for (int i = 0; i < validTargetCount; i++)
+                //{
+                //    validTargetIndexes.TryGetValue(i, out int index);
+                //    targets[i] = collisions[index].gameObject;
+                //}
+                
+                // Start Attacking
                 soldierState = States.Attacking;
-
                 AttackTargets();
             }
         }
@@ -154,29 +172,26 @@ public class Soldier : MonoBehaviour
 
     void AttackTargets()
     {
-        foreach (GameObject target in targets)
+        foreach (GameObject target in validTargets)
         {
-            if (target != null)
+            
+            if (target.GetComponent<Soldier>().IsSoldierAlive())
+            { // target is alive
+                // Deal Damage
+                target.GetComponent<Soldier>().TakeDamageAndKnockback(damage, knockback);
+
+
+                #region Probably not necessary, distance check after knockback
+                //float distance = (target.transform.position.x - transform.position.x);
+                //if (distance > range)
+                //{ // Get closer if out of range
+                //    transform.Translate(direction * speed * Time.deltaTime, Space.World);
+                //}
+                #endregion
+            }
+            else
             {
-                if (target.GetComponent<Soldier>().IsSoldierAlive())
-                { // target is alive
-                    // Deal Damage
-                    target.GetComponent<Soldier>().TakeDamageAndKnockback(damage, knockback);
-
-                    #region Probably not necessary, distance check after knockback
-                    //float distance = (target.transform.position.x - transform.position.x);
-                    //if (distance > range)
-                    //{ // Get closer if out of range
-                    //    transform.Translate(direction * speed * Time.deltaTime, Space.World);
-                    //}
-                    #endregion
-                }
-                else
-                {
-                    targets.Remove(target);
-
-                    soldierState = States.Searching;
-                }
+                validTargets.Remove(target);
             }
         }
     }
