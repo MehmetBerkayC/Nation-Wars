@@ -258,7 +258,7 @@ public class Soldier : MonoBehaviour
     void TakeDamageAndKnockback(int damage, float knockback = 0.2f)
     {
         healthSystem.TakeDamage(damage);
-        transform.position += new Vector3(0f, P_SoldierSide == SoldierSide.Left ? knockback : -knockback, 0f);
+        transform.position += new Vector3(0f, P_SoldierSide == SoldierSide.Left ? -knockback : knockback, 0f); 
 
         //Debug.Log(gameObject.name + " Damage Taken: " + damage + " Current HP:" + healthSystem.GetHealth());
     }
