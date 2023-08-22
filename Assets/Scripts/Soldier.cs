@@ -223,6 +223,11 @@ public class Soldier : MonoBehaviour
         }
     }
 
+    void AttackTargetsProjectile()
+    {
+
+    }
+
     bool CheckIsTargetArrayEmpty()
     {
         int validCount = 0;
@@ -255,7 +260,7 @@ public class Soldier : MonoBehaviour
     }
 
     // Use this if knockback is implemented
-    void TakeDamageAndKnockback(int damage, float knockback = 0.2f)
+    public void TakeDamageAndKnockback(int damage, float knockback = 0.2f)
     {
         healthSystem.TakeDamage(damage);
         transform.position += new Vector3(0f, P_SoldierSide == SoldierSide.Left ? -knockback : knockback, 0f); 

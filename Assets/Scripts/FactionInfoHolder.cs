@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// SoldierType enum is just a note / idea if we need a class based approach
 public enum Kingdoms
 {// Name        -- Tier      -    HP     -   DMG      -  Speed    -  Range  -  Notes
     Human,      // Mid Tier  -  Mid HP   -  Mid       -  Mid      -  Mixed  -  Mid overall and no magic
