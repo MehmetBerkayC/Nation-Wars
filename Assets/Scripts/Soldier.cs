@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum SoldierSide
+{
+    Left,
+    Right
+};
+
 public class Soldier : MonoBehaviour
 {
     [SerializeField] int maxHealth;
@@ -9,10 +15,11 @@ public class Soldier : MonoBehaviour
     [SerializeField] float knockback;
 
     [SerializeField] float speed = 1f;
-    
     [SerializeField] float range = 0.5f;
-
     [SerializeField] float attackRate = 0.5f;
+
+    [SerializeField] GameObject projectilePrefab;
+    [SerializeField] Transform projectileSpawnPosition;
 
     Dictionary<bool, Vector2> movingDirection = new Dictionary<bool, Vector2>
     {
@@ -27,12 +34,6 @@ public class Soldier : MonoBehaviour
         Ranged,
         AOERanged,
     }
-
-    public enum SoldierSide
-    {
-        Left,
-        Right
-    };
 
     public SoldierSide P_SoldierSide
     {
@@ -75,6 +76,7 @@ public class Soldier : MonoBehaviour
 
     float attackTimer = 0;
 
+    
     private void OnEnable()
     {
         healthSystem = new HealthSystem(maxHealth);
@@ -94,9 +96,11 @@ public class Soldier : MonoBehaviour
             Debug.LogError("Incorrect spawn position, object will be destroyed!");
             Destroy(this.gameObject);
         }
+
+        CheckAndFlipCharacter();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (healthSystem.IsAlive())
         {
@@ -114,6 +118,10 @@ public class Soldier : MonoBehaviour
                     else if (soldierType == SoldierType.AOEMelee)
                     {
                         AttackTargetsAOE();
+                    }
+                    else if (soldierType == SoldierType.Ranged)
+                    {
+                        AttackTargetsProjectile();
                     }
                 }
                 else
@@ -155,7 +163,7 @@ public class Soldier : MonoBehaviour
 
             for (int i = 0; i < collisions.Length; i++)
             {
-                if(collisions[i].gameObject.GetComponent<Soldier>().IsSoldierAlive() && collisions[i].gameObject.GetComponent<Soldier>().P_SoldierSide != P_SoldierSide) // if enemy
+                if (collisions[i].gameObject.GetComponent<Soldier>().IsSoldierAlive() && collisions[i].gameObject.GetComponent<Soldier>().P_SoldierSide != P_SoldierSide) // if enemy
                 {
                     validTargets.Add(collisions[i].gameObject);
                 }
@@ -225,7 +233,20 @@ public class Soldier : MonoBehaviour
 
     void AttackTargetsProjectile()
     {
+        if (attackTimer >= attackRate)
+        {
+            GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPosition.position, transform.rotation);
+            projectile.gameObject.GetComponent<Projectile>().SetProjectileSide(this.soldierSide);
+            attackTimer = 0f;
+        }
+    }
 
+    void CheckAndFlipCharacter()
+    {
+        if(soldierSide == SoldierSide.Right)
+        {
+            transform.Rotate(0, 180, 0);
+        }
     }
 
     bool CheckIsTargetArrayEmpty()

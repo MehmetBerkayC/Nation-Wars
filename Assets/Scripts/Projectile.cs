@@ -8,35 +8,52 @@ public class Projectile : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] int damage;
 
-    int projectileSide;
+    SoldierSide projectileSide;
 
     Vector3 velocity;
-    Collider2D target;
+    //Collider2D target;
 
     private void Start()
     {
-        projectileSide = GetComponentInParent<Soldier>().P_SoldierSide == Soldier.SoldierSide.Left ? -1: 1;
-        projectileSize = gameObject.GetComponentInChildren<Transform>().lossyScale;
+        //projectileSize = GetComponentInChildren<Transform>().lossyScale;
         Destroy(this.gameObject, 7);
     }
 
     void FixedUpdate()
     {
         // movement
-        velocity = Vector3.right * Time.deltaTime * speed * projectileSide; 
+        velocity = Vector3.right * Time.deltaTime * speed * ((projectileSide == SoldierSide.Left)? 1: -1); 
         transform.Translate(velocity, Space.World);
 
-        // detecting target
-        target = Physics2D.OverlapBox(transform.position, projectileSize, 0);
-        Debug.Log(target);
+        //// detecting target
+        //target = Physics2D.OverlapBox(transform.position, projectileSize, 0);
+        //Debug.Log(target);
 
-        if(target != null)
+        //if(target != null)
+        //{
+        //    if (target.gameObject.GetComponent<Soldier>().IsSoldierAlive())
+        //    {
+        //        target.gameObject.GetComponent<Soldier>().TakeDamageAndKnockback(damage);
+        //        Destroy(this.gameObject);
+        //    }
+        //}
+    }
+
+    public void SetProjectileSide(SoldierSide side)
+    {
+        projectileSide = side;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("Collided: " + collision.gameObject.name);
+        Debug.Log(projectileSide);
+
+        if (collision.gameObject.GetComponent<Soldier>().P_SoldierSide != projectileSide)
         {
-            if (target.gameObject.GetComponent<Soldier>().IsSoldierAlive())
-            {
-                target.gameObject.GetComponent<Soldier>().TakeDamageAndKnockback(damage);
-                Destroy(this.gameObject);
-            }
+            collision.gameObject.GetComponent<Soldier>().TakeDamageAndKnockback(damage);
+            Destroy(this.gameObject);
         }
     }
+
 }

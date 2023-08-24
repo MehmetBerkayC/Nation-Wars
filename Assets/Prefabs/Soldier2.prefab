@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -1753282671640703679}
   m_Layer: 6
   m_Name: Soldier2
-  m_TagString: Untagged
+  m_TagString: Soldier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,6 +104,8 @@ MonoBehaviour:
   speed: 1
   range: 1
   attackRate: 1.5
+  projectilePrefab: {fileID: 0}
+  projectileSpawnPosition: {fileID: 0}
   soldierType: 0
 --- !u!61 &-1753282671640703679
 BoxCollider2D:

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -6342972409213421295}
   - component: {fileID: -1753282671640703679}
   m_Layer: 6
-  m_Name: SoldierAOE2
+  m_Name: SoldierAOE1
   m_TagString: Soldier
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99,11 +99,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 50
-  damage: 7
+  damage: 5
   knockback: 0
   speed: 1
   range: 1
-  attackRate: 2.2
+  attackRate: 2
   projectilePrefab: {fileID: 0}
   projectileSpawnPosition: {fileID: 0}
   soldierType: 1
