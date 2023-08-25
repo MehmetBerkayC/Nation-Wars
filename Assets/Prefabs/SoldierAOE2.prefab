@@ -98,15 +98,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcfedeef660f5d544a36558db9fce7aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 50
-  damage: 7
-  knockback: 0
-  speed: 1
-  range: 1
-  attackRate: 2.2
-  projectilePrefab: {fileID: 0}
-  projectileSpawnPosition: {fileID: 0}
-  soldierType: 1
+  _maxHealth: 35
+  _damage: 3
+  _knockback: 0
+  _speed: 1.5
+  _range: 0.75
+  _attackRate: 0.3
+  _projectilePrefab: {fileID: 0}
+  _projectileSpawnPosition: {fileID: 0}
+  _soldierType: 1
 --- !u!61 &-1753282671640703679
 BoxCollider2D:
   m_ObjectHideFlags: 0

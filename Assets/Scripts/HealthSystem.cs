@@ -4,41 +4,41 @@ using UnityEngine;
 
 public class HealthSystem 
 {
-    int maxHealth;
-    int currentHealth;
-    bool isAlive;
+    int _maxHealth;
+    int _currentHealth;
+    bool _isAlive;
 
     // Constructor
     public HealthSystem(int maxHealth)
     {
-        this.maxHealth = maxHealth;
-        currentHealth = maxHealth;
-        isAlive = true;
+        this._maxHealth = maxHealth;
+        _currentHealth = maxHealth;
+        _isAlive = true;
     }
 
     public void Kill()
     {
-        this.isAlive = false;
+        this._isAlive = false;
     }
 
     public bool IsAlive()
     {
-        return isAlive;
+        return _isAlive;
     }
 
     public int GetHealth()
     {
-        return currentHealth;
+        return _currentHealth;
     }
 
     public void Heal(int amount)
     {
-        if (isAlive && currentHealth < maxHealth)
+        if (_isAlive && _currentHealth < _maxHealth)
         {
-            currentHealth += amount;
-            if(currentHealth >= maxHealth)
+            _currentHealth += amount;
+            if(_currentHealth >= _maxHealth)
             {
-                currentHealth = maxHealth;
+                _currentHealth = _maxHealth;
             }
         }
         else
@@ -49,15 +49,15 @@ public class HealthSystem
 
     public void TakeDamage(int amount)
     {
-        if (isAlive)
+        if (_isAlive)
         {
-            currentHealth -= amount;
+            _currentHealth -= amount;
         }
 
-        if(currentHealth <= 0)
+        if(_currentHealth <= 0)
         {
-            currentHealth = 0;
-            isAlive = false; 
+            _currentHealth = 0;
+            _isAlive = false; 
         }
     }
 }

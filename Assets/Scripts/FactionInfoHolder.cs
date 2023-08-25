@@ -27,32 +27,32 @@ enum SoldierTypes
 // To learn about Scriptable Objects, make sure to write the same class using them
 public class FactionInfoHolder : MonoBehaviour
 {
-    [SerializeField] GameObject[] HumanKingdom;
-    [SerializeField] GameObject[] ElfKingdom;
-    [SerializeField] GameObject[] OrcKingdom;
-    [SerializeField] GameObject[] HalflingKingdom;
-    [SerializeField] GameObject[] DemonKingdom;
+    [SerializeField] GameObject[] _HumanKingdom;
+    [SerializeField] GameObject[] _ElfKingdom;
+    [SerializeField] GameObject[] _OrcKingdom;
+    [SerializeField] GameObject[] _HalflingKingdom;
+    [SerializeField] GameObject[] _DemonKingdom;
 
-    GameObject[] currentSoldierGroup;
+    GameObject[] _currentSoldierGroup;
 
     void FindSoldierGroupofKingdom(Kingdoms kingdomName)
     {
         switch (kingdomName)
         {
             case Kingdoms.Human:
-                currentSoldierGroup = HumanKingdom;
+                _currentSoldierGroup = _HumanKingdom;
                 break;
             case Kingdoms.Elf:
-                currentSoldierGroup = ElfKingdom;
+                _currentSoldierGroup = _ElfKingdom;
                 break;
             case Kingdoms.Orc:
-                currentSoldierGroup = OrcKingdom;
+                _currentSoldierGroup = _OrcKingdom;
                 break;
             case Kingdoms.Halfling:
-                currentSoldierGroup = HalflingKingdom;
+                _currentSoldierGroup = _HalflingKingdom;
                 break;
             case Kingdoms.Demon:
-                currentSoldierGroup = DemonKingdom;
+                _currentSoldierGroup = _DemonKingdom;
                 break;
             case Kingdoms.NotSelected:
                 Debug.Log("Kingdom is Not Selected");
@@ -66,7 +66,7 @@ public class FactionInfoHolder : MonoBehaviour
     public GameObject[] GetSoldierArray(Kingdoms kingdom)
     {
         FindSoldierGroupofKingdom(kingdom);
-        return currentSoldierGroup;
+        return _currentSoldierGroup;
     }
 
 }

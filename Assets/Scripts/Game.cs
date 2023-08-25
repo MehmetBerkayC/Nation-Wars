@@ -5,34 +5,34 @@ using UnityEngine;
 public class Game : MonoBehaviour
 {
     [SerializeField]
-    Spawner spawner;
+    Spawner _spawner;
 
-    [SerializeField] FactionInfoHolder management;
+    [SerializeField] FactionInfoHolder _factionInformation;
 
     // PlayerInfos
-    SpawnPositions spawnPositionLeft = SpawnPositions.Left5;
-    SpawnPositions spawnPositionRight = SpawnPositions.Right5;
+    SpawnPositions _spawnPositionLeft = SpawnPositions.Left5;
+    SpawnPositions _spawnPositionRight = SpawnPositions.Right5;
 
-    int soldierIndexLeft = 0;
-    int soldierIndexRight = 0;
+    int _soldierIndexLeft = 0;
+    int _soldierIndexRight = 0;
 
-    [SerializeField] Kingdoms kingdomLeft = Kingdoms.NotSelected;
-    [SerializeField] Kingdoms kingdomRight = Kingdoms.NotSelected;
+    [SerializeField] Kingdoms _kingdomLeft = Kingdoms.NotSelected;
+    [SerializeField] Kingdoms _kingdomRight = Kingdoms.NotSelected;
 
-    GameObject[] soldierOfLeft;
-    GameObject[] soldierOfRight;
+    GameObject[] _soldierOfLeft;
+    GameObject[] _soldierOfRight;
 
-    int quickfix = 0;
+    int _tempFix = 0;
 
     private void Update()
     {
-        if(kingdomLeft != Kingdoms.NotSelected && kingdomRight != Kingdoms.NotSelected)
+        if(_kingdomLeft != Kingdoms.NotSelected && _kingdomRight != Kingdoms.NotSelected)
         {
-            if(quickfix == 0)
+            if(_tempFix == 0)
             {
-                soldierOfLeft = management.GetSoldierArray(kingdomLeft);
-                soldierOfRight = management.GetSoldierArray(kingdomRight);
-                quickfix++;
+                _soldierOfLeft = _factionInformation.GetSoldierArray(_kingdomLeft);
+                _soldierOfRight = _factionInformation.GetSoldierArray(_kingdomRight);
+                _tempFix++;
             }
 
             // Spawn Selection
@@ -50,11 +50,11 @@ public class Game : MonoBehaviour
 
     void KingdomSelection()
     {
-        if (kingdomLeft == Kingdoms.NotSelected)
+        if (_kingdomLeft == Kingdoms.NotSelected)
         {
             Debug.Log("Kingdom Selection for Left Side not implemented");
         }
-        else if (kingdomLeft != Kingdoms.NotSelected && kingdomRight == Kingdoms.NotSelected)
+        else if (_kingdomLeft != Kingdoms.NotSelected && _kingdomRight == Kingdoms.NotSelected)
         {
             Debug.Log("Kingdom Selection for Right Side not implemented");
         }
@@ -65,39 +65,39 @@ public class Game : MonoBehaviour
         // Left Side
         if (Input.GetMouseButtonDown(0))
         {
-            spawner.SpawnSoldierLeftSide(soldierOfLeft, soldierIndexLeft, spawnPositionLeft);
+            _spawner.SpawnSoldierLeftSide(_soldierOfLeft, _soldierIndexLeft, _spawnPositionLeft);
         }
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            Debug.Log("Before Left: " + spawnPositionLeft.ToString());
+            Debug.Log("Before Left: " + _spawnPositionLeft.ToString());
             ChangeSpawnPositionForLeft(1);
-            Debug.Log("After Left: " + spawnPositionLeft.ToString());
+            Debug.Log("After Left: " + _spawnPositionLeft.ToString());
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            Debug.Log("Before Left: " + spawnPositionLeft.ToString());
+            Debug.Log("Before Left: " + _spawnPositionLeft.ToString());
             ChangeSpawnPositionForLeft(-1);
-            Debug.Log("After Left: " + spawnPositionLeft.ToString());
+            Debug.Log("After Left: " + _spawnPositionLeft.ToString());
         }
 
         // Right Side
         if (Input.GetMouseButtonDown(1))
         {
-            spawner.SpawnSoldierRightSide(soldierOfRight, soldierIndexRight, spawnPositionRight);
+            _spawner.SpawnSoldierRightSide(_soldierOfRight, _soldierIndexRight, _spawnPositionRight);
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            Debug.Log("Before Right: " + spawnPositionRight.ToString());
+            Debug.Log("Before Right: " + _spawnPositionRight.ToString());
             ChangeSpawnPositionForRight(1);
-            Debug.Log("After Right: " + spawnPositionRight.ToString());
+            Debug.Log("After Right: " + _spawnPositionRight.ToString());
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Debug.Log("Before Right: " + spawnPositionRight.ToString());
+            Debug.Log("Before Right: " + _spawnPositionRight.ToString());
             ChangeSpawnPositionForRight(-1);
-            Debug.Log("After Right: " + spawnPositionRight.ToString());
+            Debug.Log("After Right: " + _spawnPositionRight.ToString());
         }
     }
 
@@ -126,53 +126,53 @@ public class Game : MonoBehaviour
 
     void ChangeSpawnPositionForLeft(int increment)
     {
-        spawnPositionLeft += increment;
-        if(spawnPositionLeft <= SpawnPositions.Left1)
+        _spawnPositionLeft += increment;
+        if(_spawnPositionLeft <= SpawnPositions.Left1)
         {
-            spawnPositionLeft = SpawnPositions.Left1;
-        }else if(spawnPositionLeft >= SpawnPositions.Left9)
+            _spawnPositionLeft = SpawnPositions.Left1;
+        }else if(_spawnPositionLeft >= SpawnPositions.Left9)
         {
-            spawnPositionLeft = SpawnPositions.Left9;
+            _spawnPositionLeft = SpawnPositions.Left9;
         }
     }
     
     void ChangeSpawnPositionForRight(int increment)
     {
-        spawnPositionRight += increment;
-        if(spawnPositionRight <= SpawnPositions.Right1)
+        _spawnPositionRight += increment;
+        if(_spawnPositionRight <= SpawnPositions.Right1)
         {
-            spawnPositionRight = SpawnPositions.Right1;
-        }else if(spawnPositionRight >= SpawnPositions.Right9)
+            _spawnPositionRight = SpawnPositions.Right1;
+        }else if(_spawnPositionRight >= SpawnPositions.Right9)
         {
-            spawnPositionRight = SpawnPositions.Right9;
+            _spawnPositionRight = SpawnPositions.Right9;
         }
     }
 
     void ChangeSoldierIndexForLeft(int increment)
     {
-        soldierIndexLeft += increment;
+        _soldierIndexLeft += increment;
 
-        if (soldierIndexLeft >= soldierOfLeft.Length - 1)
+        if (_soldierIndexLeft >= _soldierOfLeft.Length - 1)
         {
-            soldierIndexLeft = soldierOfLeft.Length - 1;
+            _soldierIndexLeft = _soldierOfLeft.Length - 1;
         }
-        else if (soldierIndexLeft <= 0) // soldierPrefabs should be an array(change this if became a list/dictionary)
+        else if (_soldierIndexLeft <= 0) // soldierPrefabs should be an array(change this if became a list/dictionary)
         {
-            soldierIndexLeft = 0;
+            _soldierIndexLeft = 0;
         }
     }
 
     void ChangeSoldierIndexForRight(int increment)
     {
-        soldierIndexRight += increment;
+        _soldierIndexRight += increment;
 
-        if (soldierIndexRight >= soldierOfRight.Length - 1)
+        if (_soldierIndexRight >= _soldierOfRight.Length - 1)
         {
-            soldierIndexRight = soldierOfRight.Length - 1;
+            _soldierIndexRight = _soldierOfRight.Length - 1;
         }
-        else if (soldierIndexRight <= 0) // soldierPrefabs should be an array(change this if became a list/dictionary)
+        else if (_soldierIndexRight <= 0) // soldierPrefabs should be an array(change this if became a list/dictionary)
         {
-            soldierIndexRight = 0;
+            _soldierIndexRight = 0;
         }
     }
 }

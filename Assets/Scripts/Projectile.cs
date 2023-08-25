@@ -4,56 +4,60 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] Vector2 projectileSize;
-    [SerializeField] float speed;
-    [SerializeField] int damage;
+    [SerializeField] Vector2 _projectileSize;
+    [SerializeField] float _speed;
+    [SerializeField] int _damage;
 
-    SoldierSide projectileSide;
+    SoldierSide _projectileSide;
 
-    Vector3 velocity;
-    //Collider2D target;
+    Vector3 _velocity;
+    Collider2D _collision;
 
-    private void Start()
+    void Start()
     {
-        //projectileSize = GetComponentInChildren<Transform>().lossyScale;
         Destroy(this.gameObject, 7);
     }
 
-    void FixedUpdate()
+    void Update()
     {
         // movement
-        velocity = Vector3.right * Time.deltaTime * speed * ((projectileSide == SoldierSide.Left)? 1: -1); 
-        transform.Translate(velocity, Space.World);
+        _velocity = Vector3.right * Time.deltaTime * _speed * ((_projectileSide == SoldierSide.Left)? 1: -1); 
+        transform.Translate(_velocity, Space.World);
 
-        //// detecting target
-        //target = Physics2D.OverlapBox(transform.position, projectileSize, 0);
-        //Debug.Log(target);
-
-        //if(target != null)
-        //{
-        //    if (target.gameObject.GetComponent<Soldier>().IsSoldierAlive())
-        //    {
-        //        target.gameObject.GetComponent<Soldier>().TakeDamageAndKnockback(damage);
-        //        Destroy(this.gameObject);
-        //    }
-        //}
+        // detecting target
+        _collision = Physics2D.OverlapBox(transform.position, _projectileSize, 0);
+        
+        if (_collision.gameObject.TryGetComponent(out Soldier _target))
+        {
+            if (_target.IsSoldierAlive() && _target.SoldierSide != _projectileSide)
+            {
+                _target.TakeDamageAndKnockback(_damage);
+                Destroy(this.gameObject);
+            }
+        }
     }
 
     public void SetProjectileSide(SoldierSide side)
     {
-        projectileSide = side;
+        _projectileSide = side;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnDrawGizmos()
     {
-        Debug.Log("Collided: " + collision.gameObject.name);
-        Debug.Log(projectileSide);
-
-        if (collision.gameObject.GetComponent<Soldier>().P_SoldierSide != projectileSide)
-        {
-            collision.gameObject.GetComponent<Soldier>().TakeDamageAndKnockback(damage);
-            Destroy(this.gameObject);
-        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(transform.position, _projectileSize);
     }
+
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    Debug.Log("Collided: " + collision.gameObject.name);
+    //    Debug.Log(projectileSide);
+
+    //    if (collision.gameObject.GetComponent<Soldier>().P_SoldierSide != projectileSide)
+    //    {
+    //        collision.gameObject.GetComponent<Soldier>().TakeDamageAndKnockback(damage);
+    //        Destroy(this.gameObject);
+    //    }
+    //}
 
 }

@@ -94,7 +94,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6509087600498474717}
   - component: {fileID: 1484181410371212538}
-  - component: {fileID: -7406130437413395791}
   m_Layer: 0
   m_Name: Projectile
   m_TagString: Projectile
@@ -130,22 +129,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a55fbef90d836764eb6f96c738a82e51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileSize: {x: 0.1, y: 0.1}
-  speed: 3
-  damage: 10
---- !u!70 &-7406130437413395791
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6509087600498474714}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.3, y: 0.15}
-  m_Direction: 1
+  _projectileSize: {x: 0.3, y: 0.15}
+  _speed: 1
+  _damage: 5

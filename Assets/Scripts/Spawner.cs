@@ -27,7 +27,7 @@ public enum SpawnPositions
 public class Spawner : MonoBehaviour
 {
 
-    Dictionary<SpawnPositions, Vector2> spawnPositionsLeft = new Dictionary<SpawnPositions, Vector2> {
+    Dictionary<SpawnPositions, Vector2> _spawnPositionsLeft = new Dictionary<SpawnPositions, Vector2> {
         {SpawnPositions.Left1, new Vector2(-9.5f, 4)},
         {SpawnPositions.Left2, new Vector2(-9.5f, 3)},
         {SpawnPositions.Left3, new Vector2(-9.5f, 2)},
@@ -39,7 +39,7 @@ public class Spawner : MonoBehaviour
         {SpawnPositions.Left9, new Vector2(-9.5f,-4)}
     };
 
-    Dictionary<SpawnPositions, Vector2> spawnPositionsRight = new Dictionary<SpawnPositions, Vector2>
+    Dictionary<SpawnPositions, Vector2> _spawnPositionsRight = new Dictionary<SpawnPositions, Vector2>
     {
         {SpawnPositions.Right1, new Vector2(9.5f, 4)},
         {SpawnPositions.Right2, new Vector2(9.5f, 3)},
@@ -57,7 +57,7 @@ public class Spawner : MonoBehaviour
    
     public void SpawnSoldierLeftSide(GameObject[] soldierPrefabs, int soldierIndex, SpawnPositions position) // Soldier Type and Pos
     {
-        spawnPositionsLeft.TryGetValue(position, out Vector2 spawnPos); // Get spawn position
+        _spawnPositionsLeft.TryGetValue(position, out Vector2 spawnPos); // Get spawn position
 
         //Spawns Soldier in said position
         Instantiate(soldierPrefabs[soldierIndex], spawnPos, Quaternion.identity);
@@ -65,7 +65,7 @@ public class Spawner : MonoBehaviour
     
     public void SpawnSoldierRightSide(GameObject[] soldierPrefabs, int soldierIndex, SpawnPositions position) // Soldier Type and Pos
     {
-        spawnPositionsRight.TryGetValue(position, out Vector2 spawnPos); // Get spawn position
+        _spawnPositionsRight.TryGetValue(position, out Vector2 spawnPos); // Get spawn position
 
         //Spawns Soldier in said position
         Instantiate(soldierPrefabs[soldierIndex], spawnPos, Quaternion.identity);
