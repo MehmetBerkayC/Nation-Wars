@@ -134,7 +134,7 @@ MonoBehaviour:
   _damage: 10
   _knockback: 0
   _speed: 1
-  _range: 5
+  _range: 6
   _attackRate: 0.5
   _projectilePrefab: {fileID: 6509087600498474714, guid: 7ba2841f207f68744bc977b05594792b, type: 3}
   _projectileSpawnPosition: {fileID: 7441557463811199139}

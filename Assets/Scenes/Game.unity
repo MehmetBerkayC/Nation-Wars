@@ -1602,7 +1602,7 @@ MonoBehaviour:
   _spawner: {fileID: 2062601950}
   _factionInformation: {fileID: 1284914288}
   _kingdomLeft: 2
-  _kingdomRight: 0
+  _kingdomRight: 2
 --- !u!4 &1692409159
 Transform:
   m_ObjectHideFlags: 0

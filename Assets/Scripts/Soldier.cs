@@ -109,7 +109,7 @@ public class Soldier : MonoBehaviour
 
             if (_soldierState == States.Attacking)
             {
-                if (!CheckIsTargetArrayEmpty())
+                if (!CheckIsTargetArrayEmpty() /*|| CheckInRange()*/)
                 {
                     if(_soldierType == SoldierType.Melee)
                     {
@@ -143,15 +143,19 @@ public class Soldier : MonoBehaviour
         }
     }
 
+    //bool CheckInRange()
+    //{
+        
+    //}
+
     void DetectEnemies()
     {
         // Try to Detect enemy
         Vector2 currentPosition = transform.position;
         currentPosition.x += (SoldierSide == SoldierSide.Left ? _range : -_range) / 2;
-        _boxCenter = currentPosition + (SoldierSide == SoldierSide.Left ? Vector2.right : Vector2.left);
-        _boxHalfExtends = new Vector2(_range, .5f);
+        _boxCenter = currentPosition + (SoldierSide == SoldierSide.Left ? Vector2.right : Vector2.left) / 2;
+        _boxHalfExtends = new Vector2(_range, .75f);
 
-        // checking layer for enemies
         _collisions = Physics2D.OverlapBoxAll(_boxCenter, _boxHalfExtends, 0);
 
         Dictionary<int, int> validTargetIndexes = new Dictionary<int, int>();
@@ -181,24 +185,23 @@ public class Soldier : MonoBehaviour
     {
         foreach (GameObject target in _validTargets)
         {
-            if (target != null)
+            if (target != null && target.TryGetComponent(out Soldier soldier))
             {
-                if (target.GetComponent<Soldier>().IsSoldierAlive())
+                if (soldier.IsSoldierAlive() && _attackTimer >= _attackRate)
                 { // target is alive
-                    if (_attackTimer >= _attackRate)
-                    {
-                        // Deal Damage
-                        target.GetComponent<Soldier>().TakeDamageAndKnockback(_damage, _knockback);
-                        _attackTimer = 0f;
+                    
+                    // Deal Damage
+                    soldier.TakeDamageAndKnockback(_damage, _knockback);
 
-                        #region Probably not necessary, distance check after knockback
-                        //float distance = (target.transform.position.x - transform.position.x);
-                        //if (distance > range)
-                        //{ // Get closer if out of range
-                        //    transform.Translate(direction * speed * Time.deltaTime, Space.World);
-                        //}
-                        #endregion
-                    }
+                    #region Probably not necessary, distance check after knockback
+                    //float distance = (target.transform.position.x - transform.position.x);
+                    //if (distance > range)
+                    //{ // Get closer if out of range
+                    //    transform.Translate(direction * speed * Time.deltaTime, Space.World);
+                    //}
+                    #endregion
+                    
+                    _attackTimer = 0f;
                 }
             }
         }
@@ -209,13 +212,13 @@ public class Soldier : MonoBehaviour
         {
             foreach (GameObject target in _validTargets)
             {
-                if (target != null)
+                if (target != null && target.TryGetComponent(out Soldier soldier))
                 {
-                    if (target.GetComponent<Soldier>().IsSoldierAlive())
+                    if (soldier.IsSoldierAlive())
                     { // target is alive
                       // Deal Damage
 
-                        target.GetComponent<Soldier>().TakeDamageAndKnockback(_damage, _knockback);
+                        soldier.TakeDamageAndKnockback(_damage, _knockback);
 
                         #region Probably not necessary, distance check after knockback
                         //float distance = (target.transform.position.x - transform.position.x);
@@ -233,11 +236,17 @@ public class Soldier : MonoBehaviour
 
     void AttackTargetsProjectile()
     {
-        if (_attackTimer >= _attackRate)
+        foreach (GameObject target in _validTargets)
         {
-            Projectile projectile = Instantiate(_projectilePrefab, _projectileSpawnPosition.position, transform.rotation).GetComponent<Projectile>();
-            projectile.SetProjectileSide(_soldierSide);
-            _attackTimer = 0f;
+            if (target != null && target.TryGetComponent(out Soldier soldier))
+            {
+                if (soldier.IsSoldierAlive() && _attackTimer >= _attackRate)
+                {
+                    Projectile projectile = Instantiate(_projectilePrefab, _projectileSpawnPosition.position, transform.rotation).GetComponent<Projectile>();
+                    projectile.SetProjectileSide(_soldierSide);
+                    _attackTimer = 0f;
+                }
+            }
         }
     }
 
@@ -284,7 +293,7 @@ public class Soldier : MonoBehaviour
     public void TakeDamageAndKnockback(int damage, float knockback = 0.2f)
     {
         _healthSystem.TakeDamage(damage);
-        transform.position += new Vector3(0f, SoldierSide == SoldierSide.Left ? -knockback : knockback, 0f); 
+        transform.position += new Vector3(SoldierSide == SoldierSide.Left ? -knockback : knockback, 0f, 0f); 
 
         //Debug.Log(gameObject.name + " Damage Taken: " + damage + " Current HP:" + healthSystem.GetHealth());
     }

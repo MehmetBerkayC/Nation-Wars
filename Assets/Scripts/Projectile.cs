@@ -6,6 +6,7 @@ public class Projectile : MonoBehaviour
 {
     [SerializeField] Vector2 _projectileSize;
     [SerializeField] float _speed;
+    [SerializeField] float _knockback;
     [SerializeField] int _damage;
 
     SoldierSide _projectileSide;
@@ -15,7 +16,7 @@ public class Projectile : MonoBehaviour
 
     void Start()
     {
-        Destroy(this.gameObject, 7);
+        Destroy(this.gameObject, 10);
     }
 
     void Update()
@@ -24,14 +25,14 @@ public class Projectile : MonoBehaviour
         _velocity = Vector3.right * Time.deltaTime * _speed * ((_projectileSide == SoldierSide.Left)? 1: -1); 
         transform.Translate(_velocity, Space.World);
 
-        // detecting target
+        // Detecting target
         _collision = Physics2D.OverlapBox(transform.position, _projectileSize, 0);
-        
-        if (_collision.gameObject.TryGetComponent(out Soldier _target))
+
+        if (_collision.gameObject != null && _collision.gameObject.TryGetComponent(out Soldier _target))
         {
-            if (_target.IsSoldierAlive() && _target.SoldierSide != _projectileSide)
+            if (_target.SoldierSide != _projectileSide)
             {
-                _target.TakeDamageAndKnockback(_damage);
+                _target.TakeDamageAndKnockback(_damage, _knockback);
                 Destroy(this.gameObject);
             }
         }
