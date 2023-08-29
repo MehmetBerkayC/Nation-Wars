@@ -130,12 +130,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcfedeef660f5d544a36558db9fce7aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 200
-  _damage: 10
+  _maxHealth: 20
+  _damage: 15
   _knockback: 0
   _speed: 1
   _range: 6
-  _attackRate: 0.5
+  _attackRate: 1.5
   _projectilePrefab: {fileID: 6509087600498474714, guid: 7ba2841f207f68744bc977b05594792b, type: 3}
   _projectileSpawnPosition: {fileID: 7441557463811199139}
   _soldierType: 2
