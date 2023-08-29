@@ -204,6 +204,10 @@ public class Soldier : MonoBehaviour
                     _attackTimer = 0f;
                 }
             }
+            else
+            {
+                _validTargets.Remove(target);
+            }
         }
     }
     void AttackTargetsAOE()
@@ -290,10 +294,13 @@ public class Soldier : MonoBehaviour
     }
 
     // Use this if knockback is implemented
-    public void TakeDamageAndKnockback(int damage, float knockback = 0.2f)
+    public void TakeDamageAndKnockback(int damage, float knockback = 0f)
     {
         _healthSystem.TakeDamage(damage);
-        transform.position += new Vector3(SoldierSide == SoldierSide.Left ? -knockback : knockback, 0f, 0f); 
+        if (_knockback > 0f)
+        {
+            transform.position += new Vector3(SoldierSide == SoldierSide.Left ? -knockback : knockback, 0f, 0f); 
+        }
 
         //Debug.Log(gameObject.name + " Damage Taken: " + damage + " Current HP:" + healthSystem.GetHealth());
     }
